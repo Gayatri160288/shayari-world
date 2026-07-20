@@ -7,7 +7,9 @@ function Navbar() {
   return (
     <nav className="bg-gray-900 shadow-lg">
       <div className="max-w-6xl mx-auto flex justify-between items-center p-4">
-        <h1 className="text-2xl font-bold text-pink-500">❤️ Shayari World</h1>
+        <h1 className="text-2xl font-bold text-pink-500">
+          ❤️ Shayari World 🌸
+        </h1>
 
         <div className="flex gap-6 text-white">
           <NavLink to="/" className={linkClass}>
