@@ -1,9 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { toPng } from "html-to-image";
 import { useRef } from "react";
+import { getFavorites, toggleFavorite } from "../utils/favorites";
 function ShayariCard({ id, text, category, addFavorite }) {
   const [copied, setCopied] = useState(false);
   const cardRef = React.useRef(null);
+  const [isFav, setIsFav] = useState(false);
+
+  useEffect(() => {
+    const favorites = getFavorites();
+    setIsFav(favorites.includes(id));
+  }, [id]);
+
+  const handleFavorite = () => {
+    const updatedFavorites = toggleFavorite(id);
+    setIsFav(updatedFavorites.includes(id));
+  };
 
   const copyShayari = () => {
     navigator.clipboard.writeText(text);
@@ -56,16 +68,10 @@ function ShayariCard({ id, text, category, addFavorite }) {
       <p className="text-white text-lg mt-4">{text}</p>
 
       <button
-        onClick={() =>
-          addFavorite({
-            id,
-            text,
-            category,
-          })
-        }
-        className="mt-5 mr-3 bg-red-500 text-white px-5 py-2 rounded-lg hover:bg-red-600"
+        onClick={handleFavorite}
+        className="bg-red-500 text-white px-4 py-2 rounded-lg"
       >
-        ❤️ Favorite
+        {isFav ? "❤️ Favorited" : "🤍 Favorite"}
       </button>
 
       <button
