@@ -23,6 +23,16 @@ function ShayariCard({ id, text, category, addFavorite }) {
     link.click();
   };
 
+  const shareOnWhatsApp = () => {
+    const message = `${text}
+
+❤️ Shared from Shayari World`;
+
+    const url = `https://wa.me/?text=${encodeURIComponent(message)}`;
+
+    window.open(url, "_blank");
+  };
+
   return (
     <div
       ref={cardRef}
@@ -70,6 +80,13 @@ function ShayariCard({ id, text, category, addFavorite }) {
         className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg"
       >
         📸 Download
+      </button>
+
+      <button
+        onClick={shareOnWhatsApp}
+        className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg"
+      >
+        📱 WhatsApp
       </button>
     </div>
   );
