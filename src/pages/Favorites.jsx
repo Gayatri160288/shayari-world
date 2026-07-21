@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import ShayariCard from "../components/ShayariCard";
 import shayaris from "../data/shayaris";
 import { getFavorites } from "../utils/favorites";
+import { toast } from "react-hot-toast";
 
 const Favorites = () => {
   const [favoriteShayaris, setFavoriteShayaris] = useState([]);
@@ -10,8 +11,9 @@ const Favorites = () => {
   useEffect(() => {
     const favorites = getFavorites();
 
-    const filtered = shayaris.filter((shayari) =>
-      favorites.includes(shayari.id),
+    const filtered = shayaris.filter(
+      (shayari) => favorites.includes(shayari.id),
+      toast.success("Shayari copied to clipboard!"),
     );
 
     setFavoriteShayaris(filtered);
