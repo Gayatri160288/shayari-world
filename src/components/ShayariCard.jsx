@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { toPng } from "html-to-image";
 import { useRef } from "react";
 import { getFavorites, toggleFavorite } from "../utils/favorites";
-function ShayariCard({ id, text, category, addFavorite }) {
+function ShayariCard({ id, text, category, onFavoriteChange }) {
   const [copied, setCopied] = useState(false);
   const cardRef = React.useRef(null);
   const [isFav, setIsFav] = useState(false);
@@ -14,7 +14,12 @@ function ShayariCard({ id, text, category, addFavorite }) {
 
   const handleFavorite = () => {
     const updatedFavorites = toggleFavorite(id);
+
     setIsFav(updatedFavorites.includes(id));
+
+    if (onFavoriteChange) {
+      onFavoriteChange();
+    }
   };
 
   const copyShayari = () => {
