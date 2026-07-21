@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { toPng } from "html-to-image";
 import { useRef } from "react";
 import { getFavorites, toggleFavorite } from "../utils/favorites";
+import { toast } from "react-hot-toast";
 function ShayariCard({ id, text, category, onFavoriteChange }) {
   const [copied, setCopied] = useState(false);
   const cardRef = React.useRef(null);
@@ -24,7 +25,7 @@ function ShayariCard({ id, text, category, onFavoriteChange }) {
 
   const copyShayari = () => {
     navigator.clipboard.writeText(text);
-    setCopied(true);
+    toast.success("Shayari copied to clipboard!");
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -54,51 +55,78 @@ function ShayariCard({ id, text, category, onFavoriteChange }) {
     <div
       ref={cardRef}
       className="
-      bg-gray-800
-      rounded-3xl
-      p-6
+      bg-white/10
+      backdrop-blur-lg
       border
-      border-gray-700
+      border-white/20
+      rounded-3xl 
+      p-6
       shadow-xl
-      hover:shadow-pink-500/30
-      hover:-translate-y-2
-      transition-all
-      duration-300
       "
     >
-      <span className="bg-pink-500 text-white px-3 py-1 rounded-full text-sm">
+      <span
+        className="inline-block
+          bg-pink-100
+          text-pink-700
+          px-4
+          py-1
+          rounded-full
+          text-sm
+          font-semibold"
+      >
         {category}
       </span>
 
-      <p className="text-white text-lg mt-4">{text}</p>
+      <p className="text-gray-100 text-lg leading-8 mt-4 font-medium">{text}</p>
+      <div className="flex flex-wrap gap-3 mt-5">
+        <button
+          onClick={handleFavorite}
+          className="px-4
+        py-2
+        rounded-xl
+        font-medium
+        transition
+        duration-200 bg-red-500 hover:bg-red-600"
+        >
+          {isFav ? "❤️ Favorited" : "🤍 Favorite"}
+        </button>
 
-      <button
-        onClick={handleFavorite}
-        className="bg-red-500 text-white px-4 py-2 rounded-lg"
-      >
-        {isFav ? "❤️ Favorited" : "🤍 Favorite"}
-      </button>
+        <button
+          onClick={copyShayari}
+          className="px-4
+        py-2
+        rounded-xl
+        font-medium
+        transition
+        duration-200 bg-blue-500 hover:bg-blue-600"
+        >
+          {copied ? "Copied ✅" : "Copy 📋"}
+        </button>
 
-      <button
-        onClick={copyShayari}
-        className="mt-5 bg-pink-500 px-4 py-2 rounded-lg hover:bg-pink-600"
-      >
-        {copied ? "Copied ✅" : "Copy 📋"}
-      </button>
+        <button
+          onClick={downloadImage}
+          className="px-4
+        py-2
+        rounded-xl
+        font-medium
+        transition
+        duration-200 bg-green-500 hover:bg-green-600"
+        >
+          📸 Download
+        </button>
 
-      <button
-        onClick={downloadImage}
-        className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg"
-      >
-        📸 Download
-      </button>
-
-      <button
-        onClick={shareOnWhatsApp}
-        className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg"
-      >
-        📱 WhatsApp
-      </button>
+        <button
+          onClick={shareOnWhatsApp}
+          className="px-4
+        py-2
+        rounded-xl
+        font-medium
+        transition
+        duration-200 bg-emerald-500 hover:bg-emerald-600 "
+        >
+          📱 WhatsApp
+        </button>
+      </div>
     </div>
   );
 }
