@@ -1,23 +1,11 @@
-import MainLayout from "../layouts/MainLayout";
 import { useEffect, useState } from "react";
+import MainLayout from "../layouts/MainLayout";
 import ShayariCard from "../components/ShayariCard";
 import shayaris from "../data/shayaris";
 import { getFavorites } from "../utils/favorites";
-import { toast } from "react-hot-toast";
 
-const Favorites = () => {
+function Favorites() {
   const [favoriteShayaris, setFavoriteShayaris] = useState([]);
-
-  useEffect(() => {
-    const favorites = getFavorites();
-
-    const filtered = shayaris.filter(
-      (shayari) => favorites.includes(shayari.id),
-      toast.success("Shayari copied to clipboard!"),
-    );
-
-    setFavoriteShayaris(filtered);
-  }, []);
 
   const loadFavorites = () => {
     const favorites = getFavorites();
@@ -34,26 +22,61 @@ const Favorites = () => {
   }, []);
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">❤️ My Favorite Shayaris</h1>
+    <MainLayout>
+      <div className="max-w-7xl mx-auto px-5 py-10">
+        {/* Heading */}
 
-      {favoriteShayaris.length === 0 ? (
-        <p className="text-gray-500">No favorite shayaris yet.</p>
-      ) : (
-        <div className="grid gap-6">
-          {favoriteShayaris.map((shayari) => (
-            <ShayariCard
-              key={shayari.id}
-              id={shayari.id}
-              text={shayari.text}
-              category={shayari.category}
-              onFavoriteChange={loadFavorites}
-            />
-          ))}
+        <div className="text-center mb-12">
+          <h1 className="text-5xl font-extrabold text-gray-800 dark:text-white">
+            ❤️ My Favorite Shayaris
+          </h1>
+
+          <p className="mt-4 text-gray-600 dark:text-gray-300">
+            Your personal collection of beautiful Shayaris.
+          </p>
         </div>
-      )}
-    </div>
+
+        {/* Empty State */}
+
+        {favoriteShayaris.length === 0 ? (
+          <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-lg p-12 text-center">
+            <h2 className="text-6xl mb-4">💔</h2>
+
+            <h3 className="text-2xl font-bold text-gray-700 dark:text-white">
+              No Favorites Yet
+            </h3>
+
+            <p className="mt-3 text-gray-500 dark:text-gray-400">
+              Start adding your favorite Shayaris ❤️
+            </p>
+          </div>
+        ) : (
+          <>
+            <div className="mb-8">
+              <p className="text-lg text-gray-700 dark:text-gray-300">
+                Total Favorites:{" "}
+                <span className="font-bold text-pink-500">
+                  {favoriteShayaris.length}
+                </span>
+              </p>
+            </div>
+
+            <div className="grid gap-6">
+              {favoriteShayaris.map((shayari) => (
+                <ShayariCard
+                  key={shayari.id}
+                  id={shayari.id}
+                  text={shayari.text}
+                  category={shayari.category}
+                  onFavoriteChange={loadFavorites}
+                />
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+    </MainLayout>
   );
-};
+}
 
 export default Favorites;

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import shayaris from "../data/shayaris";
-import ShayariCard from "../components/ShayariCard";
+
 import MainLayout from "../layouts/MainLayout";
 import Hero from "../components/Hero";
 import SearchBar from "../components/SearchBar";
@@ -23,18 +23,63 @@ function Home() {
     return matchesSearch && matchesCategory;
   });
 
-  const randomShayari = () => {
-    const random = shayaris[Math.floor(Math.random() * shayaris.length)];
-
-    setFilteredShayaris([random]);
-  };
   return (
     <MainLayout>
-      <Hero />
-      <RandomButton onRandom={randomShayari} />
-      <SearchBar search={search} setSearch={setSearch} />
-      <CategoryFilter category={category} setCategory={setCategory} />
-      <ShayariGrid shayaris={filteredShayaris} />
+      <div className="max-w-7xl mx-auto px-5">
+        <Hero />
+
+        {/* Statistics */}
+
+        <div className="grid md:grid-cols-3 gap-6 my-12">
+          <div className="rounded-3xl bg-white dark:bg-slate-800 shadow-lg p-6 text-center">
+            <h2 className="text-4xl font-bold text-pink-500">
+              {shayaris.length}
+            </h2>
+
+            <p className="mt-2 text-gray-600 dark:text-gray-300">
+              Total Shayaris
+            </p>
+          </div>
+
+          <div className="rounded-3xl bg-white dark:bg-slate-800 shadow-lg p-6 text-center">
+            <h2 className="text-4xl font-bold text-purple-500">
+              {categories.length - 1}
+            </h2>
+
+            <p className="mt-2 text-gray-600 dark:text-gray-300">Categories</p>
+          </div>
+
+          <div className="rounded-3xl bg-white dark:bg-slate-800 shadow-lg p-6 text-center">
+            <h2 className="text-4xl font-bold text-green-500">❤️</h2>
+
+            <p className="mt-2 text-gray-600 dark:text-gray-300">
+              Share Your Feelings
+            </p>
+          </div>
+        </div>
+
+        {/* Search */}
+
+        <div className="mb-8">
+          <SearchBar search={search} setSearch={setSearch} />
+        </div>
+
+        {/* Categories */}
+
+        <div className="mb-10">
+          <CategoryFilter category={category} setCategory={setCategory} />
+        </div>
+
+        {/* Results */}
+
+        <div className="mb-5">
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
+            Showing {filteredShayaris.length} Shayaris
+          </h2>
+        </div>
+
+        <ShayariGrid shayaris={filteredShayaris} />
+      </div>
     </MainLayout>
   );
 }
