@@ -23,10 +23,15 @@ function Home() {
     return matchesSearch && matchesCategory;
   });
 
+  const randomShayari = () => {
+    const random = shayaris[Math.floor(Math.random() * shayaris.length)];
+
+    setFilteredShayaris([random]);
+  };
   return (
     <MainLayout>
       <Hero />
-
+      <RandomButton onRandom={randomShayari} />
       <SearchBar search={search} setSearch={setSearch} />
       <CategoryFilter category={category} setCategory={setCategory} />
       <ShayariGrid shayaris={filteredShayaris} />
