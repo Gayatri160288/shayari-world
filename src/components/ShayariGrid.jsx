@@ -7,8 +7,10 @@ function ShayariGrid({ shayaris }) {
         <ShayariCard
           key={item.id}
           id={item.id}
+          title={item.title}
           text={item.text}
-          category={item.category}
+          author={item.author}
+          category={item.category?.name}
         />
       ))}
     </div>

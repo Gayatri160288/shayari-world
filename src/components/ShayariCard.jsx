@@ -5,7 +5,7 @@ import { Heart, Copy, Download, MessageCircle } from "lucide-react";
 
 import { getFavorites, toggleFavorite } from "../utils/favorites";
 
-function ShayariCard({ id, text, category, onFavoriteChange }) {
+function ShayariCard({ id, title, text, author, category, onFavoriteChange }) {
   const cardRef = React.useRef(null);
 
   const [copied, setCopied] = useState(false);
@@ -123,7 +123,11 @@ function ShayariCard({ id, text, category, onFavoriteChange }) {
       >
         {category}
       </span>
-
+      {title && (
+        <h3 className="text-xl font-bold text-pink-600 dark:text-pink-300 mt-4">
+          {title}
+        </h3>
+      )}
       {/* Shayari */}
       <p
         className="
@@ -138,7 +142,11 @@ function ShayariCard({ id, text, category, onFavoriteChange }) {
       >
         {text}
       </p>
-
+      {author && (
+        <p className="mt-4 text-right italic text-gray-500 dark:text-gray-300">
+          — {author}
+        </p>
+      )}
       <hr className="my-6 border-gray-200 dark:border-slate-700" />
 
       {/* Buttons */}

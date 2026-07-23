@@ -1,5 +1,4 @@
-import { useState } from "react";
-import shayaris from "../data/shayaris";
+import { useEffect, useMemo, useState } from "react";
 
 import MainLayout from "../layouts/MainLayout";
 import Hero from "../components/Hero";
@@ -7,28 +6,52 @@ import SearchBar from "../components/SearchBar";
 import CategoryFilter from "../components/CategoryFilter";
 import ShayariGrid from "../components/ShayariGrid";
 
+import { getAllShayaris, getCategories } from "../services/shayariService";
+
 function Home() {
+  const [shayaris, setShayaris] = useState([]);
+  const [categories, setCategories] = useState([]);
+
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
 
-  const categories = ["All", "Love", "Sad", "Friendship", "Motivation"];
+  useEffect(() => {
+    loadData();
+  }, []);
 
-  const filteredShayaris = shayaris.filter((item) => {
-    const matchesSearch =
-      item.text.toLowerCase().includes(search.toLowerCase()) ||
-      item.category.toLowerCase().includes(search.toLowerCase());
+  const loadData = async () => {
+    try {
+      const shayariData = await getAllShayaris();
+      const categoryData = await getCategories();
 
-    const matchesCategory = category === "All" || item.category === category;
+      setShayaris(shayariData);
+      setCategories(categoryData);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
-    return matchesSearch && matchesCategory;
-  });
+  const filteredShayaris = useMemo(() => {
+    return shayaris.filter((item) => {
+      const categoryName = item.category?.name || "";
+
+      const matchesSearch =
+        item.text.toLowerCase().includes(search.toLowerCase()) ||
+        categoryName.toLowerCase().includes(search.toLowerCase()) ||
+        item.title.toLowerCase().includes(search.toLowerCase());
+
+      const matchesCategory = category === "All" || categoryName === category;
+
+      return matchesSearch && matchesCategory;
+    });
+  }, [shayaris, search, category]);
+
+  const categoryList = ["All", ...categories.map((c) => c.name)];
 
   return (
     <MainLayout>
       <div className="max-w-7xl mx-auto px-5">
         <Hero />
-
-        {/* Statistics */}
 
         <div className="grid md:grid-cols-3 gap-6 my-12">
           <div className="rounded-3xl bg-white dark:bg-slate-800 shadow-lg p-6 text-center">
@@ -43,7 +66,7 @@ function Home() {
 
           <div className="rounded-3xl bg-white dark:bg-slate-800 shadow-lg p-6 text-center">
             <h2 className="text-4xl font-bold text-purple-500">
-              {categories.length - 1}
+              {categories.length}
             </h2>
 
             <p className="mt-2 text-gray-600 dark:text-gray-300">Categories</p>
@@ -58,19 +81,17 @@ function Home() {
           </div>
         </div>
 
-        {/* Search */}
-
         <div className="mb-8">
           <SearchBar search={search} setSearch={setSearch} />
         </div>
 
-        {/* Categories */}
-
         <div className="mb-10">
-          <CategoryFilter category={category} setCategory={setCategory} />
+          <CategoryFilter
+            categories={categoryList}
+            category={category}
+            setCategory={setCategory}
+          />
         </div>
-
-        {/* Results */}
 
         <div className="mb-5">
           <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
