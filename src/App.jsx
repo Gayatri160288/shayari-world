@@ -6,6 +6,8 @@ import About from "./pages/About";
 
 import AdminLogin from "./admin/pages/AdminLogin";
 import AdminDashboard from "./admin/pages/AdminDashboard";
+import Categories from "./admin/pages/Categories";
+import Shayaris from "./admin/pages/Shayaris";
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
         <Route path="/admin/login" element={<AdminLogin />} />
 
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        <Route path="/admin/categories" element={<Categories />} />
+        <Route path="/admin/shayaris" element={<Shayaris />} />
       </Routes>
     </>
   );
