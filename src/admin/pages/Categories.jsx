@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import AdminLayout from "../layouts/AdminLayout";
+import confirmDelete from "../../utils/confirmDelete";
+import Swal from "sweetalert2";
 import {
   getCategories,
   createCategory,
@@ -22,10 +24,6 @@ function Categories() {
       console.log(err);
     }
   };
-
-  useEffect(() => {
-    loadCategories();
-  }, []);
 
   const handleSaveCategory = async () => {
     if (!categoryName.trim()) return;
@@ -64,20 +62,42 @@ function Categories() {
     setIsEditing(false);
   };
   const handleDelete = async (id) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this category?",
-    );
+    const result = await Swal.fire({
+      title: "Delete Category?",
+      text: "This action cannot be undone.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#e11d48",
+      cancelButtonColor: "#6b7280",
+      confirmButtonText: "Yes, Delete",
+    });
 
-    if (!confirmDelete) return;
+    if (!result.isConfirmed) return;
 
     try {
       await deleteCategory(id);
 
+      Swal.fire({
+        icon: "success",
+        title: "Deleted!",
+        text: "Category deleted successfully.",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+
       loadCategories();
-    } catch (err) {
-      console.log(err);
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Oops!",
+        text: "Unable to delete category.",
+      });
     }
   };
+
+  useEffect(() => {
+    loadCategories();
+  }, []);
 
   return (
     <AdminLayout>
@@ -114,14 +134,14 @@ function Categories() {
                 <td className="p-4 text-center">
                   <button
                     onClick={() => handleEdit(category)}
-                    className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg"
+                    className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg mr-3"
                   >
                     Edit
                   </button>
 
                   <button
                     onClick={() => handleDelete(category.id)}
-                    className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg"
+                    className="bg-red-500 text-white px-4 py-2 rounded-lg"
                   >
                     Delete
                   </button>
