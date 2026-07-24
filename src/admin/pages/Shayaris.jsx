@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import AdminLayout from "../layouts/AdminLayout";
+import confirmDelete from "../../utils/confirmDelete";
+import Swal from "sweetalert2";
 import {
   getAllShayaris,
   getCategories,
@@ -116,22 +118,28 @@ function Shayaris() {
     });
   };
   const handleDelete = async (id) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this Shayari?",
-    );
+    const result = await Swal.fire({
+      title: "Delete Shayari?",
+      text: "This action cannot be undone.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#e11d48",
+      cancelButtonColor: "#6b7280",
+      confirmButtonText: "Delete",
+    });
 
-    if (!confirmDelete) return;
+    if (!result.isConfirmed) return;
 
-    try {
-      await deleteShayari(id);
+    await deleteShayari(id);
 
-      toast.success("Shayari deleted successfully!");
+    Swal.fire({
+      icon: "success",
+      title: "Deleted Successfully",
+      timer: 1500,
+      showConfirmButton: false,
+    });
 
-      loadShayaris();
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to delete Shayari");
-    }
+    loadShayaris();
   };
 
   useEffect(() => {
