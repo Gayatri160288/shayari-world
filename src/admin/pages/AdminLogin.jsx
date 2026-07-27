@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 
-import { loginAdmin } from "../../services/authService";
+import { loginAdmin, saveAuth } from "../../services/authService";
 
 function AdminLogin() {
   const navigate = useNavigate();
@@ -22,10 +22,7 @@ function AdminLogin() {
       const data = await loginAdmin(email, password);
 
       if (data.success) {
-        localStorage.setItem("adminToken", data.token);
-
-        localStorage.setItem("admin", JSON.stringify(data.admin));
-
+        saveAuth(data);
         toast.success("Welcome Admin ❤️");
 
         setTimeout(() => {

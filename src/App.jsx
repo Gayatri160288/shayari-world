@@ -8,7 +8,7 @@ import AdminLogin from "./admin/pages/AdminLogin";
 import AdminDashboard from "./admin/pages/AdminDashboard";
 import Categories from "./admin/pages/Categories";
 import Shayaris from "./admin/pages/Shayaris";
-
+import ProtectedRoute from "./components/ProtectedRoute";
 function App() {
   return (
     <>
@@ -23,9 +23,30 @@ function App() {
         {/* Admin */}
         <Route path="/admin/login" element={<AdminLogin />} />
 
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
-        <Route path="/admin/categories" element={<Categories />} />
-        <Route path="/admin/shayaris" element={<Shayaris />} />
+        <Route
+          path="/admin/dashboard"
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/categories"
+          element={
+            <ProtectedRoute>
+              <Categories />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/shayaris"
+          element={
+            <ProtectedRoute>
+              <Shayaris />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </>
   );
