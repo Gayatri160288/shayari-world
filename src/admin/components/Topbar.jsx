@@ -1,12 +1,23 @@
 import { useNavigate } from "react-router-dom";
-
+import { logout } from "../../services/authService";
+import Swal from "sweetalert2";
 function Topbar() {
   const navigate = useNavigate();
 
-  const logout = () => {
-    localStorage.removeItem("adminToken");
+  const handleLogout = async () => {
+    const result = await Swal.fire({
+      title: "Logout?",
+      text: "Do you want to logout?",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Logout",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#dc2626",
+    });
 
-    localStorage.removeItem("admin");
+    if (!result.isConfirmed) return;
+
+    logout();
 
     navigate("/admin/login");
   };
@@ -16,7 +27,7 @@ function Topbar() {
       <h2 className="text-3xl font-bold text-purple-700">Dashboard</h2>
 
       <button
-        onClick={logout}
+        onClick={handleLogout}
         className="bg-red-500 hover:bg-red-600 px-5 py-2 rounded-lg text-white"
       >
         Logout
