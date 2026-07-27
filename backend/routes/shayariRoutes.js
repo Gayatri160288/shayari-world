@@ -1,6 +1,7 @@
 const express = require("express");
 
 const router = express.Router();
+const authMiddleware = require("../middleware/authMiddleware");
 
 const {
   getShayaris,
@@ -12,12 +13,12 @@ const {
 
 router.get("/", getShayaris);
 
-router.get("/:id", getShayariById);
+router.get("/:id", authMiddleware, getShayariById);
 
-router.post("/", createShayari);
+router.post("/", authMiddleware, createShayari);
 
-router.put("/:id", updateShayari);
+router.put("/:id", authMiddleware, updateShayari);
 
-router.delete("/:id", deleteShayari);
+router.delete("/:id", authMiddleware, deleteShayari);
 
 module.exports = router;

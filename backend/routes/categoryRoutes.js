@@ -1,5 +1,5 @@
 const express = require("express");
-
+const authMiddleware = require("../middleware/authMiddleware");
 const router = express.Router();
 
 const {
@@ -11,10 +11,10 @@ const {
 
 router.get("/", getCategories);
 
-router.post("/", createCategory);
+router.post("/", authMiddleware, createCategory);
 
-router.put("/:id", updateCategory);
+router.put("/:id", authMiddleware, updateCategory);
 
-router.delete("/:id", deleteCategory);
+router.delete("/:id", authMiddleware, deleteCategory);
 
 module.exports = router;
