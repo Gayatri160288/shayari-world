@@ -1,11 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { toPng } from "html-to-image";
 import { toast } from "react-hot-toast";
-import { Heart, Copy, Download, MessageCircle } from "lucide-react";
+import { Heart, Copy, Download, MessageCircle, ImageIcon } from "lucide-react";
 
 import { getFavorites, toggleFavorite } from "../utils/favorites";
 
-function ShayariCard({ id, title, text, author, category, onFavoriteChange }) {
+function ShayariCard({
+  id,
+  title,
+  text,
+  author,
+  category,
+  onFavoriteChange,
+  onImageClick,
+}) {
   const cardRef = React.useRef(null);
 
   const [copied, setCopied] = useState(false);
@@ -263,6 +271,32 @@ function ShayariCard({ id, title, text, author, category, onFavoriteChange }) {
         >
           <MessageCircle size={18} />
           WhatsApp
+        </button>
+        <button
+          onClick={() =>
+            onImageClick({
+              title,
+              text,
+              author,
+            })
+          }
+          className="
+    col-span-2
+    flex
+    items-center
+    justify-center
+    gap-2
+    rounded-xl
+    py-3
+    bg-purple-600
+    hover:bg-purple-700
+    text-white
+    font-semibold
+    transition-all
+  "
+        >
+          <ImageIcon size={18} />
+          Generate Image
         </button>
       </div>
     </div>

@@ -5,6 +5,7 @@ import Hero from "../components/Hero";
 import SearchBar from "../components/SearchBar";
 import CategoryFilter from "../components/CategoryFilter";
 import ShayariGrid from "../components/ShayariGrid";
+import ShayariImageModal from "../components/ShayariImageModal";
 
 import { getAllShayaris, getCategories } from "../services/shayariService";
 
@@ -14,6 +15,8 @@ function Home() {
 
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
+
+  const [imageData, setImageData] = useState(null);
 
   useEffect(() => {
     loadData();
@@ -48,60 +51,78 @@ function Home() {
 
   const categoryList = ["All", ...categories.map((c) => c.name)];
 
+  const openImageModal = (shayari) => {
+    setImageData(shayari);
+  };
+
   return (
-    <MainLayout>
-      <div className="max-w-7xl mx-auto px-5">
-        <Hero />
+    <>
+      <MainLayout>
+        <div className="max-w-7xl mx-auto px-5">
+          <Hero />
 
-        <div className="grid md:grid-cols-3 gap-6 my-12">
-          <div className="rounded-3xl bg-white dark:bg-slate-800 shadow-lg p-6 text-center">
-            <h2 className="text-4xl font-bold text-pink-500">
-              {shayaris.length}
+          <div className="grid md:grid-cols-3 gap-6 my-12">
+            <div className="rounded-3xl bg-white dark:bg-slate-800 shadow-lg p-6 text-center">
+              <h2 className="text-4xl font-bold text-pink-500">
+                {shayaris.length}
+              </h2>
+
+              <p className="mt-2 text-gray-600 dark:text-gray-300">
+                Total Shayaris
+              </p>
+            </div>
+
+            <div className="rounded-3xl bg-white dark:bg-slate-800 shadow-lg p-6 text-center">
+              <h2 className="text-4xl font-bold text-purple-500">
+                {categories.length}
+              </h2>
+
+              <p className="mt-2 text-gray-600 dark:text-gray-300">
+                Categories
+              </p>
+            </div>
+
+            <div className="rounded-3xl bg-white dark:bg-slate-800 shadow-lg p-6 text-center">
+              <h2 className="text-4xl font-bold text-green-500">❤️</h2>
+
+              <p className="mt-2 text-gray-600 dark:text-gray-300">
+                Share Your Feelings
+              </p>
+            </div>
+          </div>
+
+          <div className="mb-8">
+            <SearchBar search={search} setSearch={setSearch} />
+          </div>
+
+          <div className="mb-10">
+            <CategoryFilter
+              categories={categoryList}
+              category={category}
+              setCategory={setCategory}
+            />
+          </div>
+
+          <div className="mb-5">
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
+              Showing {filteredShayaris.length} Shayaris
             </h2>
-
-            <p className="mt-2 text-gray-600 dark:text-gray-300">
-              Total Shayaris
-            </p>
           </div>
 
-          <div className="rounded-3xl bg-white dark:bg-slate-800 shadow-lg p-6 text-center">
-            <h2 className="text-4xl font-bold text-purple-500">
-              {categories.length}
-            </h2>
-
-            <p className="mt-2 text-gray-600 dark:text-gray-300">Categories</p>
-          </div>
-
-          <div className="rounded-3xl bg-white dark:bg-slate-800 shadow-lg p-6 text-center">
-            <h2 className="text-4xl font-bold text-green-500">❤️</h2>
-
-            <p className="mt-2 text-gray-600 dark:text-gray-300">
-              Share Your Feelings
-            </p>
-          </div>
-        </div>
-
-        <div className="mb-8">
-          <SearchBar search={search} setSearch={setSearch} />
-        </div>
-
-        <div className="mb-10">
-          <CategoryFilter
-            categories={categoryList}
-            category={category}
-            setCategory={setCategory}
+          <ShayariGrid
+            shayaris={filteredShayaris}
+            onImageClick={openImageModal}
           />
         </div>
-
-        <div className="mb-5">
-          <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
-            Showing {filteredShayaris.length} Shayaris
-          </h2>
-        </div>
-
-        <ShayariGrid shayaris={filteredShayaris} />
-      </div>
-    </MainLayout>
+      </MainLayout>
+      <ShayariImageModal
+        open={!!imageData}
+        onClose={() => setImageData(null)}
+        title={imageData?.title}
+        text={imageData?.text}
+        author={imageData?.author}
+      />
+    </>
   );
 }
 
