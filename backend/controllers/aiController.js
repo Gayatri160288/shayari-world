@@ -6,20 +6,27 @@ const ai = new GoogleGenAI({
 
 const generateShayari = async (req, res) => {
   try {
-    const { title, category, mood } = req.body;
+    const { title, category, mood, language, style, length } = req.body;
 
     const prompt = `
-Write a beautiful Hindi Shayari.
+Write one beautiful Shayari.
 
-Category: ${category}
-Mood: ${mood}
 Title: ${title}
 
-Rules:
-- Maximum 4 lines
-- Original
-- Emotional
-- Return ONLY the shayari.
+Category: ${category}
+
+Mood: ${mood}
+
+Language: ${language}
+
+Writing Style: ${style}
+
+Length: ${length}
+
+Requirements:
+- Do not include any explanation.
+- Return only the Shayari.
+- Make it original and emotionally engaging.
 `;
 
     const response = await ai.models.generateContent({
