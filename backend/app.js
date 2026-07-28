@@ -4,6 +4,7 @@ const categoryRoutes = require("./routes/categoryRoutes");
 const shayariRoutes = require("./routes/shayariRoutes");
 const authRoutes = require("./routes/authRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
+const aiRoutes = require("./routes/aiRoutes");
 
 const app = express();
 
@@ -13,6 +14,7 @@ app.use("/dashboard", dashboardRoutes);
 app.use("/auth", authRoutes);
 app.use("/categories", categoryRoutes);
 app.use("/shayaris", shayariRoutes);
+app.use("/ai", aiRoutes);
 
 app.get("/", (req, res) => {
   res.json({
