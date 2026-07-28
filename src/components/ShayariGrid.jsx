@@ -1,6 +1,6 @@
 import ShayariCard from "./ShayariCard";
 
-function ShayariGrid({ shayaris }) {
+function ShayariGrid({ shayaris, onImageClick }) {
   return (
     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
       {shayaris.map((item) => (
@@ -11,6 +11,7 @@ function ShayariGrid({ shayaris }) {
           text={item.text}
           author={item.author}
           category={item.category?.name}
+          onImageClick={onImageClick}
         />
       ))}
     </div>
