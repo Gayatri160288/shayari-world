@@ -10,6 +10,8 @@ import {
   deleteShayari,
 } from "../../services/shayariService";
 import { toast } from "react-hot-toast";
+import { Sparkles } from "lucide-react";
+import { generateAIShayari } from "../../services/aiService";
 
 function Shayaris() {
   const [shayaris, setShayaris] = useState([]);
@@ -26,6 +28,8 @@ function Shayaris() {
     categoryId: "",
     status: "published",
   });
+  const [mood, setMood] = useState("");
+  const [generating, setGenerating] = useState(false);
 
   const loadShayaris = async () => {
     try {
@@ -82,6 +86,7 @@ function Shayaris() {
       setEditingId(null);
       setIsEditing(false);
       setShowModal(false);
+      setMood("");
 
       loadShayaris();
     } catch (err) {
@@ -116,6 +121,7 @@ function Shayaris() {
       author: "",
       status: "published",
     });
+    setMood("");
   };
   const handleDelete = async (id) => {
     const result = await Swal.fire({
@@ -140,6 +146,38 @@ function Shayaris() {
     });
 
     loadShayaris();
+  };
+  const handleGenerateAI = async () => {
+    if (!formData.title || !formData.categoryId || !mood) {
+      toast.error("Please enter Title, Category and Mood");
+      return;
+    }
+
+    try {
+      setGenerating(true);
+
+      const category = categories.find(
+        (c) => c.id === Number(formData.categoryId),
+      );
+
+      const result = await generateAIShayari({
+        title: formData.title,
+        category: category.name,
+        mood,
+      });
+
+      setFormData((prev) => ({
+        ...prev,
+        text: result.text,
+      }));
+
+      toast.success("✨ Shayari generated successfully!");
+    } catch (error) {
+      console.error(error);
+      toast.error("AI generation failed");
+    } finally {
+      setGenerating(false);
+    }
   };
 
   useEffect(() => {
@@ -242,6 +280,46 @@ function Shayaris() {
                   </option>
                 ))}
               </select>
+
+              <select
+                value={mood}
+                onChange={(e) => setMood(e.target.value)}
+                className="border rounded-lg p-3"
+              >
+                <option value="">Select Mood</option>
+                <option value="Romantic">❤️ Romantic</option>
+                <option value="Sad">💔 Sad</option>
+                <option value="Friendship">🤝 Friendship</option>
+                <option value="Motivational">🔥 Motivational</option>
+                <option value="Happy">😊 Happy</option>
+                <option value="Emotional">😢 Emotional</option>
+                <option value="Lonely">🌙 Lonely</option>
+              </select>
+
+              <button
+                type="button"
+                onClick={handleGenerateAI}
+                disabled={generating}
+                className="
+    flex
+    items-center
+    justify-center
+    gap-2
+    bg-gradient-to-r
+    from-purple-600
+    via-pink-500
+    to-orange-500
+    hover:opacity-90
+    text-white
+    rounded-lg
+    py-3
+    font-semibold
+  "
+              >
+                <Sparkles size={18} />
+
+                {generating ? "Generating..." : "Generate with AI"}
+              </button>
 
               <textarea
                 rows="5"
