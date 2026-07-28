@@ -9,25 +9,25 @@ const generateShayari = async (req, res) => {
     const { title, category, mood, language, style, length } = req.body;
 
     const prompt = `
-Write one beautiful Shayari.
+          Write one beautiful Shayari.
 
-Title: ${title}
+          Title: ${title}
 
-Category: ${category}
+          Category: ${category}
 
-Mood: ${mood}
+          Mood: ${mood}
 
-Language: ${language}
+          Language: ${language}
 
-Writing Style: ${style}
+          Writing Style: ${style}
 
-Length: ${length}
+          Length: ${length}
 
-Requirements:
-- Do not include any explanation.
-- Return only the Shayari.
-- Make it original and emotionally engaging.
-`;
+          Requirements:
+          - Do not include any explanation.
+          - Return only the Shayari.
+          - Make it original and emotionally engaging.
+          `;
 
     const response = await ai.models.generateContent({
       model: "gemini-3.5-flash",
