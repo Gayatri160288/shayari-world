@@ -30,6 +30,9 @@ function Shayaris() {
   });
   const [mood, setMood] = useState("");
   const [generating, setGenerating] = useState(false);
+  const [language, setLanguage] = useState("Hindi");
+  const [style, setStyle] = useState("Classic");
+  const [length, setLength] = useState("Medium");
 
   const loadShayaris = async () => {
     try {
@@ -87,6 +90,9 @@ function Shayaris() {
       setIsEditing(false);
       setShowModal(false);
       setMood("");
+      setLanguage("Hindi");
+      setStyle("Classic");
+      setLength("Medium");
 
       loadShayaris();
     } catch (err) {
@@ -122,6 +128,9 @@ function Shayaris() {
       status: "published",
     });
     setMood("");
+    setLanguage("Hindi");
+    setStyle("Classic");
+    setLength("Medium");
   };
   const handleDelete = async (id) => {
     const result = await Swal.fire({
@@ -164,6 +173,9 @@ function Shayaris() {
         title: formData.title,
         category: category.name,
         mood,
+        language,
+        style,
+        length,
       });
 
       setFormData((prev) => ({
@@ -294,6 +306,40 @@ function Shayaris() {
                 <option value="Happy">😊 Happy</option>
                 <option value="Emotional">😢 Emotional</option>
                 <option value="Lonely">🌙 Lonely</option>
+              </select>
+
+              <select
+                value={language}
+                onChange={(e) => setLanguage(e.target.value)}
+                className="border rounded-lg p-3"
+              >
+                <option value="Hindi">🇮🇳 Hindi</option>
+                <option value="English">🇬🇧 English</option>
+                <option value="Hinglish">🗣️ Hinglish</option>
+                <option value="Marathi">🌺 Marathi</option>
+              </select>
+
+              <select
+                value={style}
+                onChange={(e) => setStyle(e.target.value)}
+                className="border rounded-lg p-3"
+              >
+                <option value="Classic">📜 Classic</option>
+                <option value="Modern">✨ Modern</option>
+                <option value="Urdu">🕌 Urdu</option>
+                <option value="Bollywood">🎬 Bollywood</option>
+                <option value="Instagram">📱 Instagram</option>
+                <option value="Deep Poetry">🖋️ Deep Poetry</option>
+              </select>
+
+              <select
+                value={length}
+                onChange={(e) => setLength(e.target.value)}
+                className="border rounded-lg p-3"
+              >
+                <option value="Short">Short (2 lines)</option>
+                <option value="Medium">Medium (4 lines)</option>
+                <option value="Long">Long (6–8 lines)</option>
               </select>
 
               <button
