@@ -20,6 +20,9 @@ function Shayaris() {
   const [showModal, setShowModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editingId, setEditingId] = useState(null);
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [categoryFilter, setCategoryFilter] = useState("All");
 
   const [formData, setFormData] = useState({
     title: "",
@@ -33,6 +36,9 @@ function Shayaris() {
   const [language, setLanguage] = useState("Hindi");
   const [style, setStyle] = useState("Classic");
   const [length, setLength] = useState("Medium");
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const itemsPerPage = 10;
 
   const loadShayaris = async () => {
     try {
@@ -191,17 +197,77 @@ function Shayaris() {
       setGenerating(false);
     }
   };
+  const filteredShayaris = shayaris.filter((item) => {
+    const matchesSearch =
+      item.title.toLowerCase().includes(search.toLowerCase()) ||
+      item.text.toLowerCase().includes(search.toLowerCase()) ||
+      item.author.toLowerCase().includes(search.toLowerCase());
+
+    const matchesStatus =
+      statusFilter === "All" || item.status === statusFilter;
+
+    const matchesCategory =
+      categoryFilter === "" || item.category?.name === categoryFilter;
+
+    return matchesSearch && matchesStatus && matchesCategory;
+  });
+  const resetFilters = () => {
+    setSearch("");
+    setCategoryFilter("");
+    setStatusFilter("All"); // or "" if you also change your status dropdown
+    setCurrentPage(1); // if you're using pagination
+  };
+  const totalPages = Math.ceil(filteredShayaris.length / itemsPerPage);
+
+  const paginatedShayaris = filteredShayaris.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage,
+  );
 
   useEffect(() => {
     loadShayaris();
     loadCategories();
-  }, []);
+    setCurrentPage(1);
+  }, [search, statusFilter, categoryFilter]);
 
   return (
     <AdminLayout>
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Shayaris</h1>
+        <div className="bg-white rounded-2xl shadow p-5 mb-6">
+          <div className="grid md:grid-cols-3 gap-4">
+            <input
+              type="text"
+              placeholder="🔍 Search title, author or shayari..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="border rounded-xl p-3"
+            />
 
+            <select
+              value={categoryFilter}
+              onChange={(e) => setCategoryFilter(e.target.value)}
+              className="border rounded-xl p-3 min-w-[220px]"
+            >
+              <option value="" disabled>
+                Select Category
+              </option>
+
+              {categories.map((cat) => (
+                <option key={cat.id} value={cat.name}>
+                  {cat.name}
+                </option>
+              ))}
+            </select>
+
+            <button
+              onClick={resetFilters}
+              className="px-4 py-3 rounded-xl bg-red-500 hover:bg-red-600 text-white transition"
+            >
+              ↺ Reset
+            </button>
+          </div>
+        </div>
         <button
           onClick={() => setShowModal(true)}
           className="bg-pink-600 hover:bg-pink-700 text-white px-5 py-3 rounded-xl"
@@ -214,7 +280,7 @@ function Shayaris() {
         <table className="w-full">
           <thead className="bg-purple-700 text-white">
             <tr>
-              <th className="p-4 text-left">ID</th>
+              <th className="p-4 text-left">Sr. No.</th>
               <th className="p-4 text-left">Title</th>
               <th className="p-4 text-left">Category</th>
               <th className="p-4 text-left">Author</th>
@@ -223,9 +289,9 @@ function Shayaris() {
           </thead>
 
           <tbody>
-            {shayaris.map((shayari) => (
+            {paginatedShayaris.map((shayari, index) => (
               <tr key={shayari.id} className="border-b hover:bg-gray-50">
-                <td className="p-4">{shayari.id}</td>
+                <td className="p-4">{index + 1}</td>
 
                 <td className="p-4">{shayari.title}</td>
 
@@ -252,6 +318,35 @@ function Shayaris() {
             ))}
           </tbody>
         </table>
+        <div className="flex justify-center items-center gap-2 mt-6">
+          <button
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage(currentPage - 1)}
+            className="px-4 py-2 rounded-lg bg-gray-200 disabled:opacity-50"
+          >
+            Previous
+          </button>
+
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button
+              key={i}
+              onClick={() => setCurrentPage(i + 1)}
+              className={`px-4 py-2 rounded-lg ${
+                currentPage === i + 1 ? "bg-pink-600 text-white" : "bg-gray-200"
+              }`}
+            >
+              {i + 1}
+            </button>
+          ))}
+
+          <button
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage(currentPage + 1)}
+            className="px-4 py-2 rounded-lg bg-gray-200 disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
       </div>
       {showModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">

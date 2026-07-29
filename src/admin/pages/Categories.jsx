@@ -116,7 +116,7 @@ function Categories() {
         <table className="w-full">
           <thead className="bg-purple-700 text-white">
             <tr>
-              <th className="text-left p-4">ID</th>
+              <th className="text-left p-4">Sr. No.</th>
 
               <th className="text-left p-4">Name</th>
 
@@ -125,9 +125,9 @@ function Categories() {
           </thead>
 
           <tbody>
-            {categories.map((category) => (
+            {categories.map((category, index) => (
               <tr key={category.id} className="border-b hover:bg-gray-50">
-                <td className="p-4">{category.id}</td>
+                <td className="p-4">{index + 1}</td>
 
                 <td className="p-4">{category.name}</td>
 

@@ -1,20 +1,27 @@
 import { useEffect, useState } from "react";
 import MainLayout from "../layouts/MainLayout";
 import ShayariCard from "../components/ShayariCard";
-import shayaris from "../data/shayaris";
+
 import { getFavorites } from "../utils/favorites";
+import { getAllShayaris } from "../services/shayariService";
 
 function Favorites() {
   const [favoriteShayaris, setFavoriteShayaris] = useState([]);
 
-  const loadFavorites = () => {
-    const favorites = getFavorites();
+  const loadFavorites = async () => {
+    try {
+      const ids = getFavorites();
 
-    const filtered = shayaris.filter((shayari) =>
-      favorites.includes(shayari.id),
-    );
+      const allShayaris = await getAllShayaris();
 
-    setFavoriteShayaris(filtered);
+      const filtered = allShayaris.filter((shayari) =>
+        ids.includes(shayari.id),
+      );
+
+      setFavoriteShayaris(filtered);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   useEffect(() => {
@@ -24,50 +31,37 @@ function Favorites() {
   return (
     <MainLayout>
       <div className="max-w-7xl mx-auto px-5 py-10">
-        {/* Heading */}
-
         <div className="text-center mb-12">
-          <h1 className="text-5xl font-extrabold text-gray-800 dark:text-white">
-            ❤️ My Favorite Shayaris
-          </h1>
+          <h1 className="text-5xl font-extrabold">❤️ My Favorite Shayaris</h1>
 
-          <p className="mt-4 text-gray-600 dark:text-gray-300">
-            Your personal collection of beautiful Shayaris.
-          </p>
+          <p className="mt-3 text-gray-500">Your personal collection</p>
         </div>
 
-        {/* Empty State */}
-
         {favoriteShayaris.length === 0 ? (
-          <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-lg p-12 text-center">
-            <h2 className="text-6xl mb-4">💔</h2>
+          <div className="text-center bg-white rounded-3xl shadow-lg p-12">
+            <h2 className="text-6xl">💔</h2>
 
-            <h3 className="text-2xl font-bold text-gray-700 dark:text-white">
-              No Favorites Yet
-            </h3>
-
-            <p className="mt-3 text-gray-500 dark:text-gray-400">
-              Start adding your favorite Shayaris ❤️
-            </p>
+            <h3 className="text-2xl font-bold mt-4">No Favorites Yet</h3>
           </div>
         ) : (
           <>
-            <div className="mb-8">
-              <p className="text-lg text-gray-700 dark:text-gray-300">
-                Total Favorites:{" "}
-                <span className="font-bold text-pink-500">
-                  {favoriteShayaris.length}
-                </span>
-              </p>
-            </div>
+            <p className="mb-8 text-lg">
+              Total Favorites :
+              <span className="font-bold text-pink-600">
+                {" "}
+                {favoriteShayaris.length}
+              </span>
+            </p>
 
-            <div className="grid gap-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {favoriteShayaris.map((shayari) => (
                 <ShayariCard
                   key={shayari.id}
                   id={shayari.id}
+                  title={shayari.title}
                   text={shayari.text}
-                  category={shayari.category}
+                  author={shayari.author}
+                  category={shayari.category?.name}
                   onFavoriteChange={loadFavorites}
                 />
               ))}
