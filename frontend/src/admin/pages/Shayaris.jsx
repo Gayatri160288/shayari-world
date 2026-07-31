@@ -22,7 +22,7 @@ function Shayaris() {
   const [editingId, setEditingId] = useState(null);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
-  const [categoryFilter, setCategoryFilter] = useState("All");
+  const [categoryFilter, setCategoryFilter] = useState("");
 
   const [formData, setFormData] = useState({
     title: "",
@@ -211,12 +211,7 @@ function Shayaris() {
 
     return matchesSearch && matchesStatus && matchesCategory;
   });
-  const resetFilters = () => {
-    setSearch("");
-    setCategoryFilter("");
-    setStatusFilter("All"); // or "" if you also change your status dropdown
-    setCurrentPage(1); // if you're using pagination
-  };
+
   const totalPages = Math.ceil(filteredShayaris.length / itemsPerPage);
 
   const paginatedShayaris = filteredShayaris.slice(
@@ -227,6 +222,16 @@ function Shayaris() {
   useEffect(() => {
     loadShayaris();
     loadCategories();
+  }, []);
+
+  const resetFilters = () => {
+    setSearch("");
+    setCategoryFilter("");
+    setStatusFilter("All"); // or "" if you also change your status dropdown
+    setCurrentPage(1); // if you're using pagination
+  };
+
+  useEffect(() => {
     setCurrentPage(1);
   }, [search, statusFilter, categoryFilter]);
 
@@ -249,9 +254,7 @@ function Shayaris() {
               onChange={(e) => setCategoryFilter(e.target.value)}
               className="border rounded-xl p-3 min-w-[220px]"
             >
-              <option value="" disabled>
-                Select Category
-              </option>
+              <option value="">All Categories</option>
 
               {categories.map((cat) => (
                 <option key={cat.id} value={cat.name}>
