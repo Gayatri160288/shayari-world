@@ -19,5 +19,13 @@ async function startServer() {
     console.error(error.message);
   }
 }
+process.on("uncaughtException", (err) => {
+  console.error("UNCAUGHT EXCEPTION");
+  console.error(err);
+});
 
+process.on("unhandledRejection", (err) => {
+  console.error("UNHANDLED REJECTION");
+  console.error(err);
+});
 startServer();
