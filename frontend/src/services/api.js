@@ -2,7 +2,7 @@ import axios from "axios";
 import { logout, getToken } from "./authService";
 
 const api = axios.create({
-  baseURL: "http://localhost:5000",
+  baseURL: "https://shayari-world-production.up.railway.app",
 });
 
 api.interceptors.request.use((config) => {

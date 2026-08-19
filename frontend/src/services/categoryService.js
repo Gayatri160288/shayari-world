@@ -1,6 +1,6 @@
 import api from "./api";
 
-const API = "http://localhost:5000/categories";
+const API = "https://shayari-world-production.up.railway.app/categories";
 
 export const getCategories = async () => api.get(API);
 
