@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/auth";
+const API_URL = "https://shayari-world-production.up.railway.app/auth";
 
 export const loginAdmin = async (email, password) => {
   const response = await axios.post(`${API_URL}/login`, {
