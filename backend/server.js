@@ -16,7 +16,7 @@ async function startServer() {
     });
   } catch (error) {
     console.error("❌ Database Connection Failed");
-    console.error(error.message);
+    console.error(error);
   }
 }
 process.on("uncaughtException", (err) => {
